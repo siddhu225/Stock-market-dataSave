@@ -36,6 +36,8 @@ const addStock = (stock) => {
         allEntries.push(row);
       })
       .on('end', async (rowCount) => {
+        allEntries = [...allEntries, ...allEntries, ...allEntries];
+        const total = allEntries.length;
         // Using mongodb insertMany
         let start = new Date(); // start measuring time
         let mainPromise = [];
@@ -45,7 +47,7 @@ const addStock = (stock) => {
         }
         await StockModel.collection.insertMany(mainPromise, { ordered: false });
         let end = new Date(); // end measuring time
-        console.log( `using mongodb insertMany for ${rowCount} documents it took ${end - start} ms`);
+        console.log( `using mongodb insertMany for ${total} documents it took ${end - start} ms`);
 
         // Using BULK insert
         const bulk = StockModel.collection.initializeUnorderedBulkOp();
@@ -56,7 +58,7 @@ const addStock = (stock) => {
         }
         await bulk.execute();
         end = new Date(); // end measuring time
-        console.log( `using mongodb bulk for ${rowCount} documents it took ${end - start} ms`);
+        console.log( `using mongodb bulk for ${total} documents it took ${end - start} ms`);
 
         // parallel insertion using promise.all
         let itemChunks = _.chunk(allEntries, 100);
@@ -73,7 +75,7 @@ const addStock = (stock) => {
           }
         }
         end = new Date(); // end measuring time
-        console.log( `using mongodb parallel save for ${rowCount} documents it took ${end - start} ms`);
+        console.log( `using mongodb parallel save for ${total} documents it took ${end - start} ms`);
       });
   } catch (e) {
     console.log('error', e);
