@@ -5,7 +5,8 @@ This is a Stock market data save application done using node js and mongodb:
 ### Things done in this application:
 ```
 1). getting the Data from https://www.kaggle.com/jacksoncrow/stock-market-dataset
-2). created a mongoose model and inserting 8000 entries in db in less than 1 second in three different ways.
+2). created a mongoose model and inserting over 24k entries in db in three different ways.
+3). Implemented bulk insert in three different ways.
 ```
 
 ## Project setup
