@@ -18,29 +18,23 @@
 // composition function = f(g(h(x)))
 
 
-(async() => {
-  const sqaureAsync = (number, cb) => {
-    setTimeout(() => {
-      return cb(number * number)
-    }, 1000)
+(() => {
+  const squareAsync = (number, cb) => {
+    setTimeout(()=> {
+      return cb(number*number);
+    },1000);
   }
-  const sqaureAsyncArray = [sqaureAsync, sqaureAsync, sqaureAsync];
-  compositeSqaureFn = async (value, array) => {
-    let finalVal = value;
-    for (let i=0; i< array.length; i+=1) {
-      await array[i](finalVal, (res) => {
-        finalVal = res;
-      });
-      await new Promise(resolve => setTimeout(resolve, 1000));
-    }
-    return finalVal;
+  
+  const squareAsyncArray = [squareAsync, squareAsync, squareAsync];
+  
+  const mymap = (number, index, asyncArray) => {
+    if(index >= asyncArray.length) return console.log(number);
+    asyncArray[index](number, (number)=> mymap(number, index + 1, asyncArray));
   }
-  let start = Date.now();
-  console.log('time-in', Date.now())
-  const output = await compositeSqaureFn(2, sqaureAsyncArray) // ==> prints 256 after 3seconds
-  let end = Date.now();
-  console.log('time-out', Date.now())
-  console.log(`printing output after ${end-start} seconds`);
-  console.log('output', output)
+  
+  const compositeSquareFn = (number, asyncArray) => {
+    return mymap(number, 0, asyncArray)
+  }
+  compositeSquareFn(2, squareAsyncArray) // ==> prints 256 after 3seconds
 
 })();
